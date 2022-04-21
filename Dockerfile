@@ -1,3 +1,9 @@
 FROM php:8.0-apache
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update
+RUN apt-get install -y \
+        zip 
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+WORKDIR /var/www/
+COPY composer.json composer.lock ./
+RUN composer install --prefer-source --no-interaction
+WORKDIR /var/www/html
