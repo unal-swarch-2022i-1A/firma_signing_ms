@@ -14,14 +14,17 @@ use Firebase\JWT\Key;
 // https://dinochiesa.github.io/jwt/
 $token = null;
 $headers = apache_request_headers();
-if(isset($headers['Authorization'])){
+$auth = null;
+if (isset($headers['Authorization'])) $auth = $headers['Authorization'];
+if (isset($headers['authorization'])) $auth = $headers['authorization'];
+if($auth){
   $matches = array();
-  preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches);
+  preg_match('/Bearer\s(\S+)/', $auth, $matches);
   if(isset($matches[1])){
     $token = $matches[1];
   }
 } 
-$obj['token'] = $token;
+//$obj['token'] = $token;
 $tks = explode('.', $token);
 
 list($headb64, $bodyb64, $cryptob64) = $tks;
