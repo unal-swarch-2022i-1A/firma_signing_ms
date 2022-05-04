@@ -26,12 +26,11 @@ if($auth){
 } 
 //$obj['token'] = $token;
 $tks = explode('.', $token);
-
 list($headb64, $bodyb64, $cryptob64) = $tks;
 $payload = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64));
 $obj['user_id'] = $payload->user_id;
 
-// La llave que llega firma_keys_ms
+// La llave que llega [firma_keys_ms]
 $key = '-----BEGIN RSA PRIVATE KEY-----
 MIICWwIBAAKBgQDAZSfzwxio51ITASN7m7Ck5GMA8gUpSPHKOn6lYQ17ZqGO6YWq
 jOzYNL/ipxVWq8Ztr1zueOpIFSnKxf7XG1u/FIdkUlufpRcUSahrXxbUJX36+Qqk
@@ -50,7 +49,6 @@ CuC3MgSNxQqoi16tuQJABfEHYSJ5PAt4BbPZ1jXEbjWtN4bHpcuVQE/Sa0AbzRdP
 // La carga de la llave
 $private = PublicKeyLoader::load($key);
 $public = $private->getPublicKey();
-
 
 // Extraer datos del body request
 $inputJSON = file_get_contents('php://input');
