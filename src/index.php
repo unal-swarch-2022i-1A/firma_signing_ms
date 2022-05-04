@@ -10,11 +10,15 @@ use phpseclib3\Crypt\PublicKeyLoader;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+$obj['user_id'] = null;
+$obj['data'] = null;
+$obj['signature'] = null;
+
 // Extraer el usuaroi del JWT
 // https://dinochiesa.github.io/jwt/
 $token = null;
-$headers = apache_request_headers();
 $auth = null;
+$headers = apache_request_headers();
 if (isset($headers['Authorization'])) $auth = $headers['Authorization'];
 if (isset($headers['authorization'])) $auth = $headers['authorization'];
 if($auth){
@@ -22,13 +26,13 @@ if($auth){
   preg_match('/Bearer\s(\S+)/', $auth, $matches);
   if(isset($matches[1])){
     $token = $matches[1];
+    //$obj['token'] = $token;
+    $tks = explode('.', $token);
+    list($headb64, $bodyb64, $cryptob64) = $tks;
+    $payload = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64));
+    $obj['user_id'] = $payload->user_id;
   }
 } 
-//$obj['token'] = $token;
-$tks = explode('.', $token);
-list($headb64, $bodyb64, $cryptob64) = $tks;
-$payload = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64));
-$obj['user_id'] = $payload->user_id;
 
 // La llave que llega [firma_keys_ms]
 $key = '-----BEGIN RSA PRIVATE KEY-----
@@ -53,22 +57,20 @@ $public = $private->getPublicKey();
 // Extraer datos del body request
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
-$data = $input['data'];
-$data64 = base64_encode($data);
-$obj['data'] = $data64;
 
-// Firma
-$signature = $private->sign($data);
-/* // Alterar el dato
-$data .= 'asd'; */
+if (isset($input['data'])) {
+  $data = $input['data'];
+  $data64 = base64_encode($data);
+  $obj['data'] = $data64;
 
-$signature64 = base64_encode($signature);
-$obj['signature'] = $signature64;
+  // Firma
+  $signature = $private->sign($data);
+  /* // Alterar el dato
+  $data .= 'asd'; */
 
-/* // Análogo de firma_verification_ms:
-$obj['verification'] = $public->verify($data, base64_decode($obj['signature'])) ?
-'valid signature' :
-'invalid signature'; */
+  $signature64 = base64_encode($signature);
+  $obj['signature'] = $signature64;  
+}
 
 // Salida del body response en JSON
 $myJSON = json_encode($obj);
