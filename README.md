@@ -1,4 +1,7 @@
 # Intrucciones
+
+:warning: **Atención:** este micro-servicio esta implementado como contenedor de docker.
+
 ## Petición
 Partes de la petición HTTP para firmar
 1. EL Token JWT en el encabezado con el  `user_id: 123`. https://dinochiesa.github.io/jwt/
