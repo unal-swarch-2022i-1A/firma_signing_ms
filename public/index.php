@@ -4,13 +4,19 @@ header('Content-Type: application/json; charset=utf-8');
  * https://phpseclib.com/docs/rsa
  */
 require __DIR__ . '/../vendor/autoload.php';
-require './sign.php';
+require './../src/sign.php';
 
 // Extraer datos del body request
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
-if (!isset($input['user_id']) || !isset($input['user_id'])) {
+
+$error['fields'] = [];
+if (!isset($input['user_id'])) array_push($error['fields'],'user_id');
+if (!isset($input['data'])) array_push($error['fields'],'data');
+if (!isset($input['user_id']) || !isset($input['data'])) {
     http_response_code(400);
+    $error['messsage'] = 'Missing fields';
+    echo json_encode($error);    
     die();
 }
 

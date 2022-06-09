@@ -8,7 +8,7 @@ Partes de la petición HTTP para firmar
 1. El dato a firmar en el cuerpo
 
 ```bash
-curl --location --request POST 'http://localhost:8095' \
+curl --silent --location --request POST 'http://localhost:8092' \
 --header 'Content-Type: application/json' \
 --header 'Accept: application/json' \
 --data-raw '{
@@ -25,3 +25,14 @@ Es el dato o mensaje a firmar en base64 y la firma RSA
   "signature": "oJoDodeXFtolL9LcWo2Geh2NA2u+dtjaA0JT45tCGFi4Nmg3zHiuLR1+nnzt6KF4Gekg5QlXZmh2LsrXxXmplB/Py0/+k659JnmTQbnD8bLFxrJo/sYOytopo66Xltb2Oq28WoUS94pdBWOneY2WzU1nyeY1ahYi6vPzNkO47yE="
 }
 ```
+## Cliente RPC del mciro-servicio Keys
+```bash
+php -r 'include "KeysRPCClient.php"; KeysRPCClient::run(public,1);'
+```
+
+## Testing
+Desde la shell del contenedor Docker
+```bash
+cd /var/www/html
+./../vendor/bin/phpunit ./../tests
+``` 

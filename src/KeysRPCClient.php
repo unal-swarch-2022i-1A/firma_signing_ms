@@ -1,10 +1,12 @@
 <?php
+namespace App;
 # Dependencias
 require_once __DIR__ . '/../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
-
+use Dotenv;
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+$dotenv->load();
 class KeysRPCClient {
 
     private $onnection;
@@ -20,15 +22,19 @@ class KeysRPCClient {
     public function __construct()
     {
         # Variables de entorno
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
-        $dotenv->load();
+
         $RABBITMQ_DEFAULT_USER = $_ENV['RABBITMQ_DEFAULT_USER'];
         $RABBITMQ_DEFAULT_PASS = $_ENV['RABBITMQ_DEFAULT_PASS'];
         $RABBITMQ_HOST = $_ENV['RABBITMQ_HOST'];
         $RABBITMQ_PORT = $_ENV['RABBITMQ_PORT'];
         
         // Creamos una conexión al servidor AMQP
-        $this->connection = new AMQPStreamConnection($RABBITMQ_HOST, $RABBITMQ_PORT, $RABBITMQ_DEFAULT_USER, $RABBITMQ_DEFAULT_PASS);
+        $this->connection = new AMQPStreamConnection(
+            $RABBITMQ_HOST, 
+            $RABBITMQ_PORT, 
+            $RABBITMQ_DEFAULT_USER, 
+            $RABBITMQ_DEFAULT_PASS
+        );
 
         /**
          * Abrimos un canal del servidor AMQP 
@@ -100,7 +106,7 @@ class KeysRPCClient {
         );        
     }
 
-    public function call($procedure,$num)
+    public function run($procedure,$num)
     {
         $this->response = null;
         $this->corr_id = uniqid();
@@ -139,6 +145,6 @@ if (empty($num)) {
 }
 
 $keysRPCClient = new KeysRPCClient();
-$response = $keysRPCClient->call($procedure,$num);
+$response = $keysRPCClient->run($procedure,$num);
 echo ' [.] Respuesta del servidor:'.PHP_EOL;
-echo $response,PHP_EOL;
+echo $response,PHP_EOL; 
