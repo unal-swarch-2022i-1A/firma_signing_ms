@@ -6,8 +6,11 @@ services:
       dockerfile: ./Dockerfile
       context: .
     volumes:
-      - ./src:/var/www/html/
+      - ./public:/var/www/html/
+      - ./src:/var/www/src/
+      - ./tests:/var/www/tests/
     ports:
-      - 8095:80
+      - 8092:80
     extra_hosts:
       - host.docker.internal:host-gateway
+
