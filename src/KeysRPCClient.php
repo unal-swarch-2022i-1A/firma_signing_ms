@@ -67,10 +67,10 @@ class KeysRPCClient {
          * http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_queue_declare
          */
         list($this->reply_queue, ,) = $this->channel->queue_declare(
-            "keys_ms_reṕly_queue.".uniqid(),
+            "keys_ms_reply_queue",
             false,
-            false,
-            true, //exclusive
+            true, //durable
+            false, //exclusive
             false
         );
 
