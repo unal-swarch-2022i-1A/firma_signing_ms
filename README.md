@@ -16,6 +16,7 @@ curl --silent --location --request POST 'http://localhost:8092' \
   "user_id": "1"
 }'
 ```
+
 ## Respuesta esperada
 Es el dato o mensaje a firmar en base64 y la firma RSA 
 ```JSON

@@ -5,25 +5,36 @@ use App\KeysRPCClient as KeysRPCClient;
 
 final class KeysRPCClientTest extends TestCase
 {
-    public function testGenerateKeys(): void 
+    public function testInstance(): void
     {
-        $KeysRPCClient = new KeysRPCClient();
-        $response = $KeysRPCClient->run("generate",1);            
-        echo $response . PHP_EOL;
-        $this->assertNotNull( 
-            $response, 
-            "response is null or not"
-        );         
-    }
+        $this->assertInstanceOf(
+            KeysRPCClient::class,
+            $KeysRPCClient = new KeysRPCClient()
+        );
+    }    
 
     public function testGetPrivateKey(): void 
     {
         $KeysRPCClient = new KeysRPCClient();
         $response = $KeysRPCClient->run("private",1);            
-        echo $response . PHP_EOL;
+        echo "Response: ".$response . PHP_EOL;
         $this->assertNotNull( 
             $response, 
             "response is null or not"
         );         
+        echo "F1". PHP_EOL;
+    }    
+
+    public function testGenerateKeys(): void 
+    {
+        $KeysRPCClient = new KeysRPCClient();
+        $response = $KeysRPCClient->run("generate",1);            
+        echo "Response: ".$response . PHP_EOL;
+        $this->assertNotNull( 
+            $response, 
+            "response is null or not"
+        );                 
     }
+
+
 }    
