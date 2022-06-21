@@ -27,6 +27,7 @@ Es el dato o mensaje a firmar en base64 y la firma RSA
 ```
 ## Cliente RPC del mciro-servicio Keys
 ```bash
+cd ../src
 php -r 'include "KeysRPCClient.php"; KeysRPCClient::run(public,1);'
 ```
 

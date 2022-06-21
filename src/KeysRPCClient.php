@@ -67,7 +67,7 @@ class KeysRPCClient {
          * http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_queue_declare
          */
         list($this->reply_queue, ,) = $this->channel->queue_declare(
-            "keys_ms_reṕly_queue",
+            "keys_ms_reṕly_queue.".uniqid(),
             false,
             false,
             true, //exclusive
@@ -137,14 +137,14 @@ class KeysRPCClient {
     }    
 }
 
-// Parametros
-$procedure = isset($argv[1]) && !empty($argv[1]) ? $argv[1] : 'private';
-$num = implode(' ', array_slice($argv, 2));
-if (empty($num)) {
-    $num = "1";    
-}
+// // Parametros
+// $procedure = isset($argv[1]) && !empty($argv[1]) ? $argv[1] : 'private';
+// $num = implode(' ', array_slice($argv, 2));
+// if (empty($num)) {
+//     $num = "1";    
+// }
 
-$keysRPCClient = new KeysRPCClient();
-$response = $keysRPCClient->run($procedure,$num);
-echo ' [.] Respuesta del servidor:'.PHP_EOL;
-echo $response,PHP_EOL; 
+// $keysRPCClient = new KeysRPCClient();
+// $response = $keysRPCClient->run($procedure,$num);
+// echo ' [.] Respuesta del servidor:'.PHP_EOL;
+// echo $response,PHP_EOL; 
