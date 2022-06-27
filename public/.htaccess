@@ -1,2 +1,3 @@
 RewriteEngine on
+RewriteRule ^sign$ /
 RewriteRule ^sign/(.*)$ /$1
