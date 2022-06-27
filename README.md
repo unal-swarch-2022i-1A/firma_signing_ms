@@ -8,13 +8,10 @@ Partes de la petición HTTP para firmar
 1. El dato a firmar en el cuerpo
 
 ```bash
-curl --silent --location --request POST 'http://localhost:8092' \
+curl --silent --location --request POST 'http://localhost:8092/sign' \
 --header 'Content-Type: application/json' \
 --header 'Accept: application/json' \
---data-raw '{
-  "data": "hola mundo!",
-  "user_id": "1"
-}'
+--data-raw '{ "data": "hola mundo!", "user_id": "1" }'
 ```
 
 ## Respuesta esperada
