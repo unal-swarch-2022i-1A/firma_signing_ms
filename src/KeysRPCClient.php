@@ -74,7 +74,7 @@ class KeysRPCClient {
             false
         );
 
-        echo ' [*] Esperando respuesta...'.PHP_EOL;
+        //echo ' [*] Esperando respuesta...'.PHP_EOL;
 
         /**
          * Consume la cola de respuestas del servidor a este proceso cliente
@@ -111,7 +111,7 @@ class KeysRPCClient {
         $this->response = null;
         $this->corr_id = uniqid();
 
-        echo " [x] Llamando keys.$procedure con $num. exchange: $this->exchangeName".PHP_EOL;
+        //echo " [x] Llamando keys.$procedure con $num. exchange: $this->exchangeName".PHP_EOL;
 
         /**
          * 
