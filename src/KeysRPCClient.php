@@ -20,7 +20,7 @@ class KeysRPCClient {
      * Definimos la conexión, el canal, la cola de respuesta y dejamos consumiendo la cola de respuesta
      */
     public function __construct()
-    {
+    {        
         # Variables de entorno
 
         $RABBITMQ_DEFAULT_USER = $_ENV['RABBITMQ_DEFAULT_USER'];
@@ -50,9 +50,20 @@ class KeysRPCClient {
         $this->exchangeName = 'keys_ms_call_exchange';
         /**
          * Se declara un `exchange`
+         *  $exchange : string
+         *  $type : string 
+         *  $passive : bool = false
+         *  $durable : bool = false 
+         *  $auto_delete : bool = true 
          * http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_exchange_declare
          */
-        $this->channel->exchange_declare($this->exchangeName, 'direct', false, false, false);
+        $this->channel->exchange_declare(
+            $this->exchangeName, 
+            'direct', 
+            false, 
+            true, //durable
+            false //auto_delete
+        );
 
         /**
          * Declaramos un cola exclusivamente para las respuestas del servidor a este cliente.
@@ -67,14 +78,15 @@ class KeysRPCClient {
          * http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_queue_declare
          */
         list($this->reply_queue, ,) = $this->channel->queue_declare(
-            "keys_ms_reply_queue",
+            //"",
+            "keys_ms_reṕly_queue.".uniqid(),
             false,
-            true, //durable
-            false, //exclusive
+            false, //durable
+            true, //exclusive
             false
         );
 
-        //echo ' [*] Esperando respuesta...'.PHP_EOL;
+        //echo ' [*] Esperando respuesta en '.$this->reply_queue.PHP_EOL;
 
         /**
          * Consume la cola de respuestas del servidor a este proceso cliente
@@ -99,6 +111,7 @@ class KeysRPCClient {
              * @param {*} rep 
              */
             function ($rep) {
+                //echo " [x] basic_consume callback".PHP_EOL;
                 if ($rep->get('correlation_id') == $this->corr_id ) {
                     $this->response = $rep->body;
                 }
@@ -108,11 +121,13 @@ class KeysRPCClient {
 
     public function run($procedure,$num)
     {
+        
         $this->response = null;
         $this->corr_id = uniqid();
 
         //echo " [x] Llamando keys.$procedure con $num. exchange: $this->exchangeName".PHP_EOL;
 
+        
         /**
          * 
          */
@@ -128,11 +143,14 @@ class KeysRPCClient {
          * http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_basic_publish
          */
         $this->channel->basic_publish($msg, $this->exchangeName, $procedure);
-
-        while (!$this->response) {
-            $this->channel->wait();
-        }
-
+        
+        
+        
+        while (!$this->response) {            
+            $this->channel->wait(null, false, 60);
+            //var_dump($this->response);
+        }        
+        //die("response".$this->response.PHP_EOL);
         return $this->response;
     }    
 }

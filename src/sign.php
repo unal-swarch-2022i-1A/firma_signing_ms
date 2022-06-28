@@ -9,15 +9,18 @@ use App\KeysRPCClient as KeysRPCClient;
 
 function getKey($user) {
 
-    $keysRPCClient = new KeysRPCClient();
-    $key = $keysRPCClient->run("private",$user);
+    $keysRPCClient = new KeysRPCClient();    
+    $key = $keysRPCClient->run("private",$user);    
     return $key;
 }
 function sign($user,$data) {
+    
+    //echo "Sign: $user $data".PHP_EOL;
     $obj['user_id'] = $user;
     $obj['data'] = $data;
 
     $key = getKey($user);    
+    //var_dump($key);
 
     // La carga de la llave
     $private = PublicKeyLoader::load($key);
