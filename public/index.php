@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 require __DIR__ . '/../vendor/autoload.php';
 require './../src/sign.php';
 
+// Config
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Extraer datos del body request
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
