@@ -147,7 +147,7 @@ class KeysRPCClient {
         
         
         while (!$this->response) {            
-            $this->channel->wait(null, false, 60);
+            $this->channel->wait(null, false, 30);
             //var_dump($this->response);
         }        
         //die("response".$this->response.PHP_EOL);
